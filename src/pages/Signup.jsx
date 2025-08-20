@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Signup() {
   const [userSignup, setUserSignup] = useState({
@@ -10,7 +11,7 @@ export default function Signup() {
   });
 
   const [signState, setSignState] = useState(false);
-  const [submitClicked, setSubmitClicked] = useState(false); // لمتابعة محاولة التسجيل
+  const [submitClicked, setSubmitClicked] = useState(false);
 
   function handleSignUp(e) {
     e.preventDefault();
@@ -29,17 +30,14 @@ export default function Signup() {
     console.log("Done!");
     setSignState(true);
 
-    // بجيب الـ users الموجودين
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
-    // بضيف اليوزر الجديد جوه الـ Array مباشرة
     users.push({
       name: userSignup.name,
       email: userSignup.email,
       password: userSignup.password,
     });
 
-    // بخزّن الأراي بعد التعديل في localStorage
     localStorage.setItem("users", JSON.stringify(users));
 
     console.log(users);
@@ -49,10 +47,21 @@ export default function Signup() {
     <>
       <Navbar />
       <div className="min-h-screen flex items-center justify-center bg-gray-900 text-gray-200 px-4">
-        <div className="w-full max-w-md bg-gray-800 p-8 rounded-lg shadow-lg">
-          <h1 className="text-3xl font-bold mb-6 text-center text-orange-500">
+        <motion.div
+          className="w-full max-w-md bg-gray-800 p-8 rounded-lg shadow-lg"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <motion.h1
+            className="text-3xl font-bold mb-6 text-center text-orange-500"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.4 }}
+          >
             Sign Up
-          </h1>
+          </motion.h1>
+
           <form className="space-y-4" onSubmit={handleSignUp}>
             <div>
               <label htmlFor="name" className="block mb-1">
@@ -65,9 +74,9 @@ export default function Signup() {
                 required
                 className="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                 value={userSignup.name}
-                onChange={(e) => {
-                  setUserSignup({ ...userSignup, name: e.target.value });
-                }}
+                onChange={(e) =>
+                  setUserSignup({ ...userSignup, name: e.target.value })
+                }
               />
             </div>
 
@@ -82,9 +91,9 @@ export default function Signup() {
                 required
                 className="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                 value={userSignup.email}
-                onChange={(e) => {
-                  setUserSignup({ ...userSignup, email: e.target.value });
-                }}
+                onChange={(e) =>
+                  setUserSignup({ ...userSignup, email: e.target.value })
+                }
               />
             </div>
 
@@ -99,18 +108,21 @@ export default function Signup() {
                 required
                 className="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                 value={userSignup.password}
-                onChange={(e) => {
-                  setUserSignup({ ...userSignup, password: e.target.value });
-                }}
+                onChange={(e) =>
+                  setUserSignup({ ...userSignup, password: e.target.value })
+                }
               />
             </div>
 
-            <button
+            <motion.button
               type="submit"
-              className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-md transition"
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-md"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 300 }}
             >
               Sign Up
-            </button>
+            </motion.button>
           </form>
 
           <p className="text-center text-sm mt-4">
@@ -123,17 +135,23 @@ export default function Signup() {
             </Link>
           </p>
 
-          {submitClicked &&
-            (signState ? (
-              <p className="text-green-500 text-center mt-4">
-                تم التسجيل بنجاح!
-              </p>
-            ) : (
-              <p className="text-red-500 text-center mt-4">
-                الرجاء ملء جميع الحقول
-              </p>
-            ))}
-        </div>
+          <AnimatePresence mode="wait">
+            {submitClicked && (
+              <motion.p
+                key="signup-message"
+                className={`text-center mt-4 ${
+                  signState ? "text-green-500" : "text-red-500"
+                }`}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+              >
+                {signState ? "تم التسجيل بنجاح!" : "الرجاء ملء جميع الحقول"}
+              </motion.p>
+            )}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </>
   );
