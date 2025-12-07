@@ -9,7 +9,7 @@ export default function Navbar() {
     <nav className="bg-gray-900 text-gray-300 w-full py-4 fixed top-0 left-0 z-50 shadow-md">
       <div className="max-w-6xl mx-auto px-4 flex justify-between items-center">
         <div className="flex items-center space-x-3">
-          <img src="/src/assets/Logo.png" alt="logo" className="w-10 h-10" />
+          <img src="/Logo.png" alt="logo" className="w-10 h-10" />
           <a
             href="/"
             className="text-xl font-bold hover:text-orange-500 transition"
